@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 878ac58ac7329b149b88c2b90c221e48, type: 3}
+  m_Name: QuestData
+  m_EditorClassIdentifier: 
+  questDatas:
+  - sceneManager: {fileID: 0}
+    ID: GameUnit0Click
+    QuestName: 
+    QuestIcon: {fileID: 0}
+    QuestDescription: 
+    QuestGoals:
+    - GoalType:
+        _classRef: QuestGoal, Assembly-CSharp
+      TargetId: RewardedAd
+      requiredammount: 1
+    QuestRewards:
+    - RewardType:
+        _classRef: QuestReward, Assembly-CSharp
+      rewardId: BuyGameUnit0
+      rewardammount: 1
+    conversation:
+      ID: 0
+      dialogues:
+      - Name: Rakesh
+        Sentence: dfghfdghdfghdfghdfghfgh
+      - Name: Rakesh
+        Sentence: juytrfdfghjftyujhgfjgfhj
+      - Name: sas
+        Sentence: ojjfdthgjfghj
+  - sceneManager: {fileID: 0}
+    ID: BuyGameUnit0
+    QuestName: 
+    QuestIcon: {fileID: 0}
+    QuestDescription: 
+    QuestGoals:
+    - GoalType:
+        _classRef: QuestGoal, Assembly-CSharp
+      TargetId: UpgradeBuy
+      requiredammount: 1
+    QuestRewards:
+    - RewardType:
+        _classRef: QuestReward, Assembly-CSharp
+      rewardId: UpgradeBuyManagerFirst
+      rewardammount: 1
+    conversation:
+      ID: 0
+      dialogues: []
+  - sceneManager: {fileID: 0}
+    ID: WorkerHolder1Buy
+    QuestName: 
+    QuestIcon: {fileID: 0}
+    QuestDescription: 
+    QuestGoals:
+    - GoalType:
+        _classRef: QuestGoal, Assembly-CSharp
+      TargetId: WorkerHolder1
+      requiredammount: 1
+    QuestRewards:
+    - RewardType:
+        _classRef: QuestReward, Assembly-CSharp
+      rewardId: UpgradeBuyManagerFirst
+      rewardammount: 1
+    conversation:
+      ID: 0
+      dialogues: []
+  - sceneManager: {fileID: 0}
+    ID: UpgradeBuyManagerFirst
+    QuestName: 
+    QuestIcon: {fileID: 0}
+    QuestDescription: 
+    QuestGoals:
+    - GoalType:
+        _classRef: QuestGoal, Assembly-CSharp
+      TargetId: WorkerHolder
+      requiredammount: 1
+    QuestRewards:
+    - RewardType:
+        _classRef: QuestReward, Assembly-CSharp
+      rewardId: ShopBtnCrossClick
+      rewardammount: 1
+    conversation:
+      ID: 0
+      dialogues: []
+  - sceneManager: {fileID: 0}
+    ID: ShopBtnCrossClick
+    QuestName: 
+    QuestIcon: {fileID: 0}
+    QuestDescription: 
+    QuestGoals:
+    - GoalType:
+        _classRef: QuestGoal, Assembly-CSharp
+      TargetId: ShopBtnCross
+      requiredammount: 1
+    QuestRewards:
+    - RewardType:
+        _classRef: QuestReward, Assembly-CSharp
+      rewardId: bank(Clone)Click
+      rewardammount: 1
+    conversation:
+      ID: 0
+      dialogues: []
+  - sceneManager: {fileID: 0}
+    ID: bank(Clone)Click
+    QuestName: 
+    QuestIcon: {fileID: 0}
+    QuestDescription: 
+    QuestGoals:
+    - GoalType:
+        _classRef: QuestGoal, Assembly-CSharp
+      TargetId: bank(Clone)
+      requiredammount: 1
+    QuestRewards:
+    - RewardType:
+        _classRef: QuestReward, Assembly-CSharp
+      rewardId: UpgradeBankTo10
+      rewardammount: 1
+    conversation:
+      ID: 0
+      dialogues: []
+  - sceneManager: {fileID: 0}
+    ID: UpgradeBankTo10
+    QuestName: 
+    QuestIcon: {fileID: 0}
+    QuestDescription: 
+    QuestGoals:
+    - GoalType:
+        _classRef: QuestGoal, Assembly-CSharp
+      TargetId: UpgradeBuy
+      requiredammount: 9
+    QuestRewards:
+    - RewardType:
+        _classRef: QuestReward, Assembly-CSharp
+      rewardId: Collect100Coin
+      rewardammount: 1
+    conversation:
+      ID: 0
+      dialogues: []
+  - sceneManager: {fileID: 0}
+    ID: Collect100Coin
+    QuestName: 
+    QuestIcon: {fileID: 0}
+    QuestDescription: 
+    QuestGoals:
+    - GoalType:
+        _classRef: QuestGoal, Assembly-CSharp
+      TargetId: 
+      requiredammount: 100
+    QuestRewards:
+    - RewardType:
+        _classRef: QuestReward, Assembly-CSharp
+      rewardId: 
+      rewardammount: 5000
+    conversation:
+      ID: 0
+      dialogues: []

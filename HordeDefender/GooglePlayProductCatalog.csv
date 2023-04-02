@@ -1,0 +1,2 @@
+Product ID,Published State,Purchase Type,Auto Translate,Locale; Title; Description,Auto Fill Prices,Price,Pricing Template ID
+test_item_coin,published,managed_by_android,false,en_US;TestItemCoin;Some Coins,true,990000,
