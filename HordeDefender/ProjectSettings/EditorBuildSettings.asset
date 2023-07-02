@@ -6,12 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/TestSystems/Scenes/TestScene.unity
-    guid: 0bc354f34a5cdfe4db8769df328bdc67
+    path: Assets/GameCore/Scenes/SampleScene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/GameSystems/DialogueSystem/Scenes/DialogueDefaultUI.unity
-    guid: 313be354c0cfbc2468dd27f86e66c6e3
-  - enabled: 1
-    path: Assets/GameSystems/QuestSystem/Scenes/TutorialScene.unity
-    guid: bcad9ed67e68eb548be738e5498e6a79
+    path: Assets/GameCore/SubScenes/TestSubScene.unity
+    guid: 3d9f48fed1228974c940c79852b40751
   m_configObjects: {}

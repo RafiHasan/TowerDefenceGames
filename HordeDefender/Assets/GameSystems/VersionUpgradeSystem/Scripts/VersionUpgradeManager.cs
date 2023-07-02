@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using TMPro;
-using UnityEditor.ShaderGraph.Serialization;
-using UnityEditor.PackageManager.Requests;
 using Newtonsoft.Json;
 
 namespace UpgradeSystem
