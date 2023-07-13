@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MovementAuthoring : MonoBehaviour
 {
+    public float3 NextPosition;
     public float Speed;
     public int2 Goal;
 }
@@ -17,7 +18,9 @@ public class MovementBaker : Baker<MovementAuthoring>
         AddComponent(entity, new MovementComponent
         {
             Speed=authoring.Speed,
-            Goal=authoring.Goal
+            Goal=authoring.Goal,
+            NextPosition=authoring.NextPosition
+
         });
     }
 }

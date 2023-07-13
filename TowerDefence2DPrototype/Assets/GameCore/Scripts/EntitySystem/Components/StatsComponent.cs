@@ -16,7 +16,11 @@ public enum StatID
     COOLDOWN,
     COOLDOWNMIN,
     COOLDOWNMAX,
-    SLOWAMMOUNT
+    DEBUFFTIME,
+    DEBUFFTIMEMIN,
+    DEBUFFTIMEMAX,
+    SLOWPERCENTAGE,
+    DAMAGEPERSECOND
 }
 
 [Serializable]
@@ -47,7 +51,7 @@ public struct StatsComponent : IComponentData
         for (int i = 0; i < Stats.Count; i++)
         {
             if (statId == Stats[i].ID)
-                return Stats[i].value*(1+ Stats[i].buff);
+                return Stats[i].value*Stats[i].buff;
         }
 
         return float.MinValue;

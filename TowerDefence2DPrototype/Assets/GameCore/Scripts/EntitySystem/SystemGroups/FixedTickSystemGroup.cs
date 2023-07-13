@@ -4,13 +4,25 @@ using Unity.Entities;
 public partial class FixedTickSystemGroup : ComponentSystemGroup
 {
     float timar=0.125f;
-    float timecounter;
+    double timecounter;
+
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        timecounter = SystemAPI.Time.ElapsedTime;
+    }
     protected override void OnUpdate()
     {
-        timecounter += SystemAPI.Time.DeltaTime;
-        if (timecounter < timar)
+        if (SystemAPI.Time.ElapsedTime < timecounter)
             return;
-        timecounter = 0;
+
+        if (!SystemAPI.HasSingleton<FIxedTickTrackerComponent>())
+            return;
+
+        RefRW<FIxedTickTrackerComponent> fIxedTickTrackerComponent= SystemAPI.GetSingletonRW<FIxedTickTrackerComponent>();
+        fIxedTickTrackerComponent.ValueRW.StepCount++;
+        timecounter += timar;
+
         base.OnUpdate();
     }
 }

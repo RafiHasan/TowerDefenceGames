@@ -8,8 +8,6 @@ public class BuffDebufferAuthoring : MonoBehaviour
 {
     public GameObject BuffDebuffPrefab;
     public StatID buffDebuffType;
-    public float CoolDown;
-    public float EffectTime;
 }
 
 public class BuffDebufferBaker : Baker<BuffDebufferAuthoring>
@@ -21,8 +19,6 @@ public class BuffDebufferBaker : Baker<BuffDebufferAuthoring>
         {
             BuffDebuffPrefab=GetEntity(authoring.BuffDebuffPrefab, TransformUsageFlags.Dynamic),
             buffDebuffType=authoring.buffDebuffType,
-            CoolDown =authoring.CoolDown,
-            EffectTime=authoring.EffectTime
         });
     }
 }

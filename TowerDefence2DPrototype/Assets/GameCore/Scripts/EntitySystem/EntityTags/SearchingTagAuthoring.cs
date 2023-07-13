@@ -10,7 +10,7 @@ public enum SearchingTagID
     PLAYER,
     ENEMY
 }
-public struct SearchingTag : IComponentData
+public struct SearchingTag : IComponentData, IEnableableComponent
 {
     public SearchingTagID TagID;
 }

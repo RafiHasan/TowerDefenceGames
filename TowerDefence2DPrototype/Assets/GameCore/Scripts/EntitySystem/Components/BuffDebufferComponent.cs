@@ -11,6 +11,8 @@ public struct BuffDebufferComponent : IComponentData
     public float CoolDownCounter;
     public float CoolDownOffset;
     public float EffectTime;
+    public float EffectTimeOffset;
+    public float EffectPower;
 }
 
 

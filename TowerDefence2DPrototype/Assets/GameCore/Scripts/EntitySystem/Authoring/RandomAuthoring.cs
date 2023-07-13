@@ -14,7 +14,8 @@ public class RandomBaker : Baker<RandomAuthoring>
         Entity entity = this.GetEntity(transformUsageFlags);
         AddComponent(entity, new RandomComponent
         {
-            random = new Unity.Mathematics.Random(authoring.Seed)
+            random = new Unity.Mathematics.Random(authoring.Seed),
+            deterministicrandom= new Unity.Mathematics.Random(authoring.Seed),
         });
     }
 }

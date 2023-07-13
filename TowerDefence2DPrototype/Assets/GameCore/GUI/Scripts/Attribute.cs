@@ -14,12 +14,54 @@ public class Attribute : MonoBehaviour
     void Start()
     {
         Name.text = ParentCard.stats.Stats[Index].ID.ToString();
-        InputField.text = ParentCard.stats.Stats[Index].value.ToString();
+        
+        if(ParentCard.stats.Stats[Index].ID==StatID.SLOWPERCENTAGE)
+        {
+            InputField.text = ((1-ParentCard.stats.Stats[Index].value)*100).ToString();
+        }
+        else if (ParentCard.stats.Stats[Index].ID == StatID.DAMAGEPERSECOND)
+        {
+            InputField.text = (-ParentCard.stats.Stats[Index].value).ToString();
+        }
+        else
+        {
+            InputField.text = ParentCard.stats.Stats[Index].value.ToString();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        ParentCard.stats.Stats[Index].value = float.Parse(InputField.text);
+
+        try
+        {
+            if (ParentCard.stats.Stats[Index].ID == StatID.SLOWPERCENTAGE)
+            {
+                ParentCard.stats.Stats[Index].value = (1- float.Parse(InputField.text) / 100);
+                if (ParentCard.stats.Stats[Index].value < 0)
+                {
+                    ParentCard.stats.Stats[Index].value = 0;
+                    InputField.text = ((1 - ParentCard.stats.Stats[Index].value) * 100).ToString();
+                }
+                if (ParentCard.stats.Stats[Index].value > 1.0f)
+                {
+                    ParentCard.stats.Stats[Index].value = 1.0f;
+                    InputField.text = ((1 - ParentCard.stats.Stats[Index].value) * 100).ToString();
+                }
+
+            }
+            else if (ParentCard.stats.Stats[Index].ID == StatID.DAMAGEPERSECOND)
+            {
+                ParentCard.stats.Stats[Index].value = -float.Parse(InputField.text);
+            }
+            else
+            {
+                ParentCard.stats.Stats[Index].value = float.Parse(InputField.text);
+            }
+        }
+        catch
+        {
+            
+        }
     }
 }

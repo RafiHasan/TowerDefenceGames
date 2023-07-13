@@ -56,7 +56,7 @@ public struct GridComponent : IComponentData
 
     public bool ContainsCell(int2 index)
     {
-        if (index.x > -GridSize.x / 2 && index.x < GridSize.x / 2 && index.y > -GridSize.y / 2 && index.y < GridSize.y / 2)
+        if (index.x >= -GridSize.x / 2 && index.x < GridSize.x / 2 && index.y >= -GridSize.y / 2 && index.y < GridSize.y / 2)
             return true;
 
         return false;

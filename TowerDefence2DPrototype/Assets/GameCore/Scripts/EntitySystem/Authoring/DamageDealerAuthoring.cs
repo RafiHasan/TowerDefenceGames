@@ -6,8 +6,6 @@ using UnityEngine;
 public class DamageDealerAuthoring : MonoBehaviour
 {
     public GameObject AttackPrefab;
-    public float Damage;
-    public float CoolDown;
 }
 
 
@@ -19,8 +17,6 @@ public class DamageDealerBaker : Baker<DamageDealerAuthoring>
         AddComponent(entity, new DamageDealerComponent
         {
             AttackPrefab = GetEntity(authoring.AttackPrefab, TransformUsageFlags.Dynamic),
-            Damage =authoring.Damage,
-            CoolDown=authoring.CoolDown,
             CoolDownCounter=0
         });
     }
