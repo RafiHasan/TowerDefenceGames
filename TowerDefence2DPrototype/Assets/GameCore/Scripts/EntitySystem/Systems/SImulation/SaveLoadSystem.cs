@@ -60,7 +60,7 @@ public partial class SaveLoadSystem : SystemBase
             inputComponent.ValueRW.Save = false;
             SerializableList saveDatas = new SerializableList { list=new List<EntitySaveData>() };
 
-            Entities.WithoutBurst().ForEach((Entity entity, LocalTransform _transform, CleanUpTag _cleanup) => {
+            Entities.WithoutBurst().ForEach((Entity entity, LocalTransform _transform, SpawnedTag _cleanup) => {
 
                 saveDatas.list.Add(new EntitySaveData { Index = _cleanup.Index, Position = _transform.Position });
 
@@ -87,7 +87,7 @@ public partial class SaveLoadSystem : SystemBase
                     delaycounter = 0,
                     count = 1
                 });
-                ecb.AddComponent(mainentity, new CleanUpTag
+                ecb.AddComponent(mainentity, new SpawnedTag
                 {
                     Index = saveDatas.list[i].Index
                 });

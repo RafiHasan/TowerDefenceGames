@@ -5,5 +5,5 @@ using UnityEngine;
 
 public struct CleanUpTag : IComponentData
 {
-    public int Index;
+
 }

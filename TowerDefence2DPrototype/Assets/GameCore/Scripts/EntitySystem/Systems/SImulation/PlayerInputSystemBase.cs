@@ -37,7 +37,9 @@ public partial class PlayerInputSystemBase : SystemBase
         _inputActions.Player.Reset.performed += Reset_performed;
         _inputActions.Player.Save.performed += Save_performed;
         _inputActions.Player.Load.performed += Load_performed;
-        
+        _inputActions.Player.Delete.performed += Delete_performed;
+
+
     }
 
     
@@ -152,6 +154,14 @@ public partial class PlayerInputSystemBase : SystemBase
         inputComponent.ValueRW.Save = true;
     }
 
+    private void Delete_performed(InputAction.CallbackContext obj)
+    {
+        if (!SystemAPI.HasSingleton<InputComponent>())
+            return;
+        RefRW<InputComponent> inputComponent = SystemAPI.GetSingletonRW<InputComponent>();
+        inputComponent.ValueRW.Delete = true;
+    }
+
     private void UnregisterInput()
     {
         _inputActions.Player.StartGame.performed -= StartGame_performed;
@@ -167,6 +177,7 @@ public partial class PlayerInputSystemBase : SystemBase
         _inputActions.Player.Reset.performed -= Reset_performed;
         _inputActions.Player.Save.performed -= Save_performed;
         _inputActions.Player.Load.performed -= Load_performed;
+        _inputActions.Player.Delete.performed -= Delete_performed;
     }
 
     protected override void OnUpdate()

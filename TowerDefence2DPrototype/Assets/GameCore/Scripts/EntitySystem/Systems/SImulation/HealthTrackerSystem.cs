@@ -37,7 +37,7 @@ public partial struct HealthTrackerSystem : ISystem
     {
         public EntityCommandBuffer.ParallelWriter ecbp;
         [BurstCompile]
-        public void Execute([EntityIndexInQuery] int sortKey,Entity entity, RefRO<HealthComponent> _Health,RefRW<PLData> _plData)
+        public void Execute([EntityIndexInQuery] int sortKey,Entity entity, RefRO<HealthComponent> _Health)
         {
 
             if (_Health.ValueRO.Value <=0)
@@ -46,8 +46,6 @@ public partial struct HealthTrackerSystem : ISystem
                 ecbp.RemoveComponent<SearchAbleComponent>(sortKey, entity);
                 ecbp.RemoveComponent<SearchingTag>(sortKey, entity);
                 ecbp.AddComponent(sortKey,entity,new DelayDestroyComponent { Delay=2.0f });
-                _plData.ValueRW.IsDead = true;
-                _plData.ValueRW.cleanuptime = 1.5f;
             }
 
         }

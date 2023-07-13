@@ -40,7 +40,7 @@ public partial struct SpawnerSystem : ISystem
         public EntityCommandBuffer.ParallelWriter ecbp;
 
         [BurstCompile]
-        public void Execute([EntityIndexInQuery] int sortKey,Entity entity, RefRW<SpawnComponent> _spawnerComponent,RefRO<CleanUpTag> _cleanUp)
+        public void Execute([EntityIndexInQuery] int sortKey,Entity entity, RefRW<SpawnComponent> _spawnerComponent,RefRO<SpawnedTag> _cleanUp)
         {
             if (_spawnerComponent.ValueRO.count > 0)
             {
@@ -60,7 +60,7 @@ public partial struct SpawnerSystem : ISystem
                         if (_spawnerComponent.ValueRO.localTransform != Entity.Null)
                         {
                             ecbp.AddComponent(sortKey, spawnedentity, new Parent { Value = _spawnerComponent.ValueRO.localTransform });
-                            ecbp.AddComponent(sortKey, spawnedentity, new CleanUpTag {  Index=_cleanUp.ValueRO.Index });
+                            ecbp.AddComponent(sortKey, spawnedentity, new SpawnedTag {  Index=_cleanUp.ValueRO.Index });
                             ecbp.SetComponent<LocalTransform>(sortKey, spawnedentity, new LocalTransform { Position = _spawnerComponent.ValueRO.Position, Scale = 1, Rotation = new quaternion() });
                             DynamicBuffer<LinkedEntityGroup> group = ecbp.AddBuffer<LinkedEntityGroup>(sortKey, _spawnerComponent.ValueRO.localTransform);
                             group.Add(_spawnerComponent.ValueRO.localTransform);  // Always add self as first member of group.

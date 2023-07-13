@@ -153,23 +153,17 @@ public partial struct SearchTargetSystem : ISystem
         [ReadOnly]
         public ComponentLookup<LocalTransform> LookUpValidity;
         [BurstCompile]
-        public void Execute(Entity entity, RefRO<StatsComponent> _stats, RefRO<SearchAbleComponent> _searchAble, RefRW<MovementComponent> _movement, RefRW<PLData> _plData)
+        public void Execute(RefRO<StatsComponent> _stats, RefRO<SearchAbleComponent> _searchAble, RefRW<MovementComponent> _movement)
         {
             bool IsValidEntity = LookUpValidity.HasComponent(_searchAble.ValueRO.Target);
             if (_searchAble.ValueRO.Target != Entity.Null && IsValidEntity)
             {
                 _movement.ValueRW.Speed = 0;
-                _plData.ValueRW.IsAttacking = true;
-
-                _plData.ValueRW.IsWalking = false;
 
             }
             else
             {
                 _movement.ValueRW.Speed = _stats.ValueRO.GetStatValue(StatID.SPEED);
-                _plData.ValueRW.IsAttacking = false;
-
-                _plData.ValueRW.IsWalking = true;
             }
         }
     }

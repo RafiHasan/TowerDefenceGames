@@ -14,6 +14,7 @@ public struct InputComponent : IComponentData
     public bool Reset;
     public bool Save;
     public bool Load;
+    public bool Delete;
     public int ItemIndex;
 
     public void Clear()
@@ -22,6 +23,7 @@ public struct InputComponent : IComponentData
         Selected = false;
         DeSelected = false;
         Spawn = false;
+        Delete = false;
         ItemIndex = 0;
     }
 }

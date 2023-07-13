@@ -23,60 +23,67 @@ public partial struct PresentationLayerSystem : ISystem
         if (ZombieCounter.Instance != null && !ZombieCounter.Instance.ShowPresentationLayer)
         {
 
-            foreach (var (plgo, entity) in SystemAPI.Query<PLGameObjectComponent>().WithEntityAccess())
+            foreach (var (presentationObject, entity) in SystemAPI.Query<PresentationObjectComponent>().WithEntityAccess())
             {
-                plgo.gameObject.SetActive(false);
+                presentationObject.gameObject.SetActive(false);
                 SpriteRenderer spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(entity);
                 spriteRenderer.enabled = true;
             }
-
             return;
         }
 
-
         EntityCommandBuffer commandBuffer = SystemAPI.GetSingleton<BeginPresentationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
-        
-        foreach(var(plgo,entity) in SystemAPI.Query<PresentationComponent>().WithEntityAccess())
+
+        foreach (var (plgo, entity) in SystemAPI.Query<PresentationComponent>().WithEntityAccess())
         {
-            GameObject go = GameObject.Instantiate(plgo.Prefab,new Vector3(-5000,-5000,0),Quaternion.identity);
+            GameObject go = GameObject.Instantiate(plgo.Prefab, new Vector3(-5000, -5000, 0), Quaternion.identity);
+            SpriteRenderer spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(entity);
+            go.GetComponent<SpriteRenderer>().color = spriteRenderer.color;
             commandBuffer.RemoveComponent<PresentationComponent>(entity);
-            commandBuffer.AddComponent(entity, new PLGameObjectComponent { gameObject = go });
-            commandBuffer.AddComponent(entity, new PLTransformComponent { transform = go.GetComponent<Transform>() });
-            commandBuffer.AddComponent(entity, new PLAnimatorComponent { animator = go.GetComponent<Animator>() });
-            commandBuffer.AddComponent(entity, new PLData { cleanuptime = float.MaxValue });
+            commandBuffer.AddComponent(entity, new PresentationObjectComponent { gameObject = go });
+            commandBuffer.AddComponent(entity, new PresentationTransformComponent { transform = go.GetComponent<Transform>() });
+            commandBuffer.AddComponent(entity, new PresentationAnimatorComponent { animator = go.GetComponent<Animator>() });
+            commandBuffer.AddComponent(entity, new PresentationDataComponent { });
         }
+
 
         
 
-        foreach (var (PLTransform, LTransform) in SystemAPI.Query<PLTransformComponent,LocalTransform>())
+        foreach (var (presentationObject, entity) in SystemAPI.Query<PresentationObjectComponent>().WithEntityAccess())
         {
-            PLTransform.transform.position = LTransform.Position;
-        }
-
-        foreach (var (PLGO,PLAnimator,PLAnimData,entity) in SystemAPI.Query<PLGameObjectComponent,PLAnimatorComponent, RefRW<PLData>>().WithEntityAccess())
-        {
-            PLAnimator.animator.SetBool("Walk", PLAnimData.ValueRO.IsWalking);
-            PLAnimator.animator.SetBool("Attack", PLAnimData.ValueRO.IsAttacking);
-            PLAnimator.animator.SetBool("Death", PLAnimData.ValueRO.IsDead);
-            PLAnimData.ValueRW.cleanuptime -= SystemAPI.Time.DeltaTime;
-
-            if(PLAnimData.ValueRW.cleanuptime<0)
-            {
-                GameObject.Destroy(PLGO.gameObject);
-                commandBuffer.RemoveComponent<PLAnimatorComponent>(entity);
-                commandBuffer.RemoveComponent<PLTransformComponent>(entity);
-                commandBuffer.RemoveComponent<PLData>(entity);
-                commandBuffer.RemoveComponent<PLGameObjectComponent>(entity);
-            }
-
-        }
-
-        foreach (var (plgo, entity) in SystemAPI.Query<PLGameObjectComponent>().WithEntityAccess())
-        { 
-            plgo.gameObject.SetActive(true);
+            presentationObject.gameObject.SetActive(true);
             SpriteRenderer spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(entity);
             spriteRenderer.enabled = false;
+            
         }
+
+        foreach (var (presentationTransform, localTransform) in SystemAPI.Query<PresentationTransformComponent,LocalTransform>())
+        {
+            presentationTransform.transform.position = localTransform.Position;
+        }
+
+        foreach (var (presentationAnimator,presentationData,entity) in SystemAPI.Query<PresentationAnimatorComponent, PresentationDataComponent>().WithEntityAccess())
+        {
+            if(presentationData.entityState==EntityState.WALK)
+            {
+                presentationAnimator.animator.SetBool("Walk", true);
+                presentationAnimator.animator.SetBool("Attack", false);
+            }
+            else if(presentationData.entityState == EntityState.ATTACK)
+            {
+                presentationAnimator.animator.SetBool("Walk", false);
+                presentationAnimator.animator.SetBool("Attack", true);
+            }
+            else if(presentationData.entityState == EntityState.DEAD)
+            {
+                presentationAnimator.animator.SetBool("Walk", false);
+                presentationAnimator.animator.SetBool("Attack", false);
+                presentationAnimator.animator.SetBool("Death", true);
+            }
+            
+        }
+
+        
 
 
     }

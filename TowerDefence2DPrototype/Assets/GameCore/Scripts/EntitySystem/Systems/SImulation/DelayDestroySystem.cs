@@ -41,7 +41,8 @@ public partial struct DelayDestroySystem : ISystem
             _delayDestroy.ValueRW.DelayCounter += deltaTime;
             if (_delayDestroy.ValueRO.DelayCounter>= _delayDestroy.ValueRO.Delay)
             {
-                ecbp.DestroyEntity(sortKey, entity);
+                ecbp.RemoveComponent<DelayDestroyComponent>(sortKey,entity);
+                ecbp.AddComponent(sortKey,entity,new CleanUpTag { });
             }
             
         }

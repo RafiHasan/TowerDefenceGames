@@ -1,9 +1,11 @@
+using System.Globalization;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 [UpdateInGroup(typeof(FixedTickSystemGroup),OrderFirst =true)]
 
@@ -28,6 +30,13 @@ public partial class GridSystem : SystemBase
         RefRW<GridComponent> gridComponent = SystemAPI.GetSingletonRW<GridComponent>();
 
         DynamicBuffer<DynamicGridCellItem> gridCells = World.EntityManager.GetBuffer<DynamicGridCellItem>(gridComponent.ValueRO.entity);
+
+
+        for(int i=0;i<gridCells.Length;i++)
+        {
+            gridCells[i] = new DynamicGridCellItem { entity = Entity.Null };
+        }
+
 
         new GridCellCheckerJob
         {
@@ -98,7 +107,7 @@ public partial class GridSystem : SystemBase
                 delaycounter = 0,
                 count = 1
             });
-            ecb.AddComponent(mainentity, new CleanUpTag
+            ecb.AddComponent(mainentity, new SpawnedTag
             {
                 Index= inputComponent.ValueRO.ItemIndex - 1
             });
@@ -139,7 +148,7 @@ public partial class GridSystem : SystemBase
                 count = ZombieCounter.Instance.ammount
             });
             
-            ecb.AddComponent(mainentity, new CleanUpTag
+            ecb.AddComponent(mainentity, new SpawnedTag
             {
                 Index = inputComponent.ValueRO.ItemIndex - 1
             });
@@ -170,22 +179,20 @@ public partial class GridSystem : SystemBase
             grid = gridComponent.ValueRO
         }.ScheduleParallel();
 
-        inputComponent.ValueRW.Clear();
-
-
         
 
-        if(Input.GetKey(KeyCode.Backspace) && gridComponent.ValueRO.IsSelected())
-        {
+        if(inputComponent.ValueRO.Delete && gridComponent.ValueRO.IsSelected())
+        {           
             EntityCommandBuffer ecb = commandBufferSystemBegin.CreateCommandBuffer();
-            if (gridCells[gridComponent.ValueRO.GetBufferIndex(gridComponent.ValueRO.GetCellPosition(gridComponent.ValueRO.SelectedCell))].entity!=Entity.Null)
+            int bufferIndex = gridComponent.ValueRO.GetBufferIndex(gridComponent.ValueRO.GetCellPosition(gridComponent.ValueRO.SelectedCell));
+            if (gridCells[bufferIndex].entity != Entity.Null && World.EntityManager.HasComponent<Simulate>(gridCells[bufferIndex].entity))
             {
-                ecb.DestroyEntity(gridCells[gridComponent.ValueRO.GetBufferIndex(gridComponent.ValueRO.GetCellPosition(gridComponent.ValueRO.SelectedCell))].entity);
-                gridCells[gridComponent.ValueRO.GetBufferIndex(gridComponent.ValueRO.GetCellPosition(gridComponent.ValueRO.SelectedCell))] = new DynamicGridCellItem { entity=Entity.Null};
+                if(!World.EntityManager.HasComponent<CleanUpTag>(gridCells[bufferIndex].entity))
+                    ecb.AddComponent(gridCells[bufferIndex].entity, new CleanUpTag { });
             }
-            
         }
 
+        inputComponent.ValueRW.Clear();
     }
 
 
@@ -195,9 +202,10 @@ public partial class GridSystem : SystemBase
         public EntityCommandBuffer.ParallelWriter ecbp;
 
         [BurstCompile]
-        public void Execute([EntityIndexInQuery] int sortKey, Entity entity, RefRW<CleanUpTag> _cleanup)
+        public void Execute([EntityIndexInQuery] int sortKey, Entity entity, RefRW<SpawnedTag> _cleanup)
         {
-            ecbp.DestroyEntity(sortKey,entity);
+            ecbp.RemoveComponent<SpawnedTag>(sortKey, entity);
+            ecbp.AddComponent(sortKey, entity, new CleanUpTag { });
         }
     }
 
