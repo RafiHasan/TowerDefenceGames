@@ -3,5 +3,5 @@ using UnityEngine;
 
 public class PresentationObjectComponent : IComponentData
 {
-    public GameObject gameObject;
+    public Sprite itemsprite;
 }

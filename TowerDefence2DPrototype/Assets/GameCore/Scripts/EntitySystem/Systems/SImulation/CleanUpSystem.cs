@@ -29,7 +29,6 @@ public partial struct CleanUpSystem : ISystem
 
             if(state.EntityManager.HasComponent<PresentationObjectComponent>(entity))
             {
-                GameObject.Destroy(state.EntityManager.GetComponentObject<PresentationObjectComponent>(entity).gameObject);
                 commandBuffer.RemoveComponent<PresentationObjectComponent>(entity);
             }
 

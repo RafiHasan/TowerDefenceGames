@@ -30252,6 +30252,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GridSelector
       objectReference: {fileID: 0}
+    - target: {fileID: 5959558520544708892, guid: 322dad5773322ec47b479d0d4d99bbd4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8206683702693366000, guid: 322dad5773322ec47b479d0d4d99bbd4, type: 3}
       propertyPath: m_RootOrder
       value: -1

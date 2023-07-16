@@ -86,9 +86,9 @@ public partial struct MovementGoalProviderSystem : ISystem
         {
             if(_search.ValueRO.TagID==SearchingTagID.ENEMY)
             {
-                //float3 mypos = _transform.ValueRO.Position;
+                float3 mypos = _transform.ValueRO.Position;
 
-                //float distance = float.MaxValue;
+                float distance = float.MaxValue;
                 float3 targetpos = grid.GetCellPosition(11,-14);
                 /*for (int i = 0; i < tempplayerpos.Length; i++)
                 {
@@ -104,16 +104,16 @@ public partial struct MovementGoalProviderSystem : ISystem
             {
                 float3 mypos = _transform.ValueRO.Position;
 
-                //float distance = float.MaxValue;
+                float distance = float.MaxValue;
                 float3 targetpos = _transform.ValueRO.Position;
-                /*for (int i=0;i< tempenemypos.Length;i++)
+                for (int i = 0; i < tempenemypos.Length; i++)
                 {
-                    if(math.distance(mypos, tempenemypos[i])< distance)
+                    if (math.distance(mypos, tempenemypos[i]) < distance)
                     {
                         targetpos = tempenemypos[i];
                         distance = math.distance(mypos, tempenemypos[i]);
                     }
-                }*/
+                }
                 _movement.ValueRW.Goal = grid.GetCellIndex(targetpos);
 
             }

@@ -67,7 +67,10 @@ public partial struct MovementSystem : ISystem
             else
             {
                 if (buffer.Length == 0)
+                {
+                    _movement.ValueRW.PathCalculated = false;
                     return;
+                }
 
                 var index = gridComponent.GetCellIndex(_transform.ValueRO.Position) + gridComponent.GridSize / 2;
                 bool foundmatch = false;
@@ -81,7 +84,6 @@ public partial struct MovementSystem : ISystem
                 {
                     _movement.ValueRW.NextPosition = gridComponent.GetCellPosition(new int2(buffer[buffer.Length - 1].x, buffer[buffer.Length - 1].y) - gridComponent.GridSize / 2);
                 }
-
             }
         }
     }

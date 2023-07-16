@@ -1,14 +1,11 @@
-using System.Collections;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
-[UpdateInGroup(typeof(NormalSystemGroup))]
+[UpdateInGroup(typeof(FixedTickSystemGroup))]
 [BurstCompile]
 public partial struct DamageDealerSystem : ISystem
 {
@@ -39,16 +36,20 @@ public partial struct DamageDealerSystem : ISystem
 
         EntityCommandBuffer commandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
 
-        float deltaTime = SystemAPI.Time.DeltaTime;
         ComponentLookup<HealthComponent> LookupHealths = SystemAPI.GetComponentLookup<HealthComponent>();
         new DamageDealerJob
         {
             LookUpValidity = SystemAPI.GetComponentLookup<LocalTransform>(),
-            deltaTime = deltaTime,
             randomComponent= randomComponent,
             fixedTickTracker= fixedTickTracker,
             ecbp = commandBuffer.AsParallelWriter(),
-            LookupHealths = LookupHealths
+            LookupHealths = LookupHealths,
+            LookUpDamage=SystemAPI.GetBufferLookup<DamageComponent>()
+        }.ScheduleParallel(state.Dependency).Complete();
+
+        new DamagingJob
+        {
+            ecbp = commandBuffer.AsParallelWriter()
         }.ScheduleParallel(state.Dependency).Complete();
     }
 
@@ -57,7 +58,6 @@ public partial struct DamageDealerSystem : ISystem
     {
         [ReadOnly]
         public ComponentLookup<LocalTransform> LookUpValidity;
-        public float deltaTime;
         [NativeDisableUnsafePtrRestriction]
         public RefRW<RandomComponent> randomComponent;
         [NativeDisableUnsafePtrRestriction]
@@ -65,6 +65,8 @@ public partial struct DamageDealerSystem : ISystem
         public EntityCommandBuffer.ParallelWriter ecbp;
         [ReadOnly]
         public ComponentLookup<HealthComponent> LookupHealths;
+        [ReadOnly]
+        public BufferLookup<DamageComponent> LookUpDamage;
         [BurstCompile]
         public void Execute([EntityIndexInQuery] int sortKey, RefRW<DamageDealerComponent> _damageDealer, RefRO<SearchAbleComponent> _searchable)
         {
@@ -74,7 +76,6 @@ public partial struct DamageDealerSystem : ISystem
 
             if (_searchable.ValueRO.Target != Entity.Null && IsValidEntity)
             {
-                _damageDealer.ValueRW.CoolDownCounter += deltaTime;
 
                 if(_damageDealer.ValueRW.CoolDownCounter >= _damageDealer.ValueRO.CoolDown)
                 {
@@ -82,25 +83,68 @@ public partial struct DamageDealerSystem : ISystem
 
                     if (hashealth)
                     {
-                        health.Value -= (_damageDealer.ValueRO.Damage + randomComponent.ValueRO.NextFloat(fixedTickTracker.ValueRO.StepCount, -_damageDealer.ValueRO.DamageOffset / 2, _damageDealer.ValueRO.DamageOffset / 2));
-                        ecbp.SetComponent<HealthComponent>(sortKey,_searchable.ValueRO.Target,new HealthComponent { Value= health.Value });
 
-                        if (_damageDealer.ValueRO.AttackPrefab != Entity.Null)
+                        if(LookUpDamage.TryGetBuffer(_searchable.ValueRO.Target, out DynamicBuffer<DamageComponent> _buffer))
                         {
-                            Entity spawnedentity = ecbp.Instantiate(sortKey, _damageDealer.ValueRO.AttackPrefab);
-                            ecbp.AddComponent(sortKey, spawnedentity, new Parent { Value = _searchable.ValueRO.Target });
-                            ecbp.SetComponent(sortKey, spawnedentity, new LocalTransform { Position = new float3(0,0,0), Scale = 1, Rotation = new quaternion() });
-                            //Might Cause Issue because of linked buffer child buffer check spawnsystem
+                            ecbp.AppendToBuffer(sortKey, _searchable.ValueRO.Target, new DamageComponent { AttackPrefab = _damageDealer.ValueRO.AttackPrefab, Damage = (_damageDealer.ValueRO.Damage + randomComponent.ValueRO.NextFloat(fixedTickTracker.ValueRO.StepCount, -_damageDealer.ValueRO.DamageOffset / 2, _damageDealer.ValueRO.DamageOffset / 2)) });
                         }
-                            
+                        else
+                        {
+                            DynamicBuffer<DamageComponent> buffer = ecbp.AddBuffer<DamageComponent>(sortKey, _searchable.ValueRO.Target);
+                            buffer.Add(new DamageComponent {  AttackPrefab= _damageDealer.ValueRO.AttackPrefab, Damage = (_damageDealer.ValueRO.Damage + randomComponent.ValueRO.NextFloat(fixedTickTracker.ValueRO.StepCount, -_damageDealer.ValueRO.DamageOffset / 2, _damageDealer.ValueRO.DamageOffset / 2)) });
+                        }
+
                     }
                     _damageDealer.ValueRW.CoolDownCounter = randomComponent.ValueRO.NextFloat(fixedTickTracker.ValueRO.StepCount ,- _damageDealer.ValueRO.CoolDownOffset / 2, _damageDealer.ValueRO.CoolDownOffset / 2);
                     
                 }
             }
             
+        }
+    }
+
+
+    [BurstCompile]
+    public partial struct DamagingJob : IJobEntity
+    {
+        public EntityCommandBuffer.ParallelWriter ecbp;
+        [BurstCompile]
+        public void Execute([EntityIndexInQuery] int sortKey,Entity entity, DynamicBuffer<DamageComponent> _buffer, RefRW<HealthComponent> _health)
+        {
+
+            NativeHashMap<Entity, int> attacprefabs = new NativeHashMap<Entity, int>(1024,Allocator.Temp);
+
+
+            for (int i = 0; i < _buffer.Length; i++)
+            {
+                _health.ValueRW.Value -= _buffer[i].Damage;
+                if (_buffer[i].AttackPrefab!=Entity.Null)
+                {
+                    if(attacprefabs.TryGetValue(_buffer[i].AttackPrefab,out int item))
+                    {
+                        attacprefabs[_buffer[i].AttackPrefab] = item + 1;
+                    }
+                    else
+                    {
+                        attacprefabs.Add(_buffer[i].AttackPrefab,1);
+                    }
+                }
+            }
+
+            _buffer.Clear();
+
+            foreach (Entity key in attacprefabs.GetKeyArray(Allocator.Temp))
+            {
+                Entity spawnedentity = ecbp.Instantiate(sortKey, key);
+                ecbp.AddComponent(sortKey, spawnedentity, new Parent { Value = entity });
+                ecbp.SetComponent(sortKey, spawnedentity, new LocalTransform { Position = new float3(0, 0, 0), Scale = 1, Rotation = new quaternion() });
+            }
 
             
         }
     }
+
+
+
+
 }

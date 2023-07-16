@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
-using UnityEngine;
-[UpdateInGroup(typeof(NormalSystemGroup))]
+[UpdateInGroup(typeof(PresentationSystemGroup))]
 [UpdateBefore(typeof(PresentationLayerSystem))]
 [BurstCompile]
 public partial struct EntityStateTrackerSystem : ISystem

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [UpdateInGroup(typeof(SimulationSystemGroup), OrderFirst = true)]
+[UpdateAfter(typeof(FixedTickSystemGroup))]
 public partial class PlayerInputSystemBase : SystemBase
 {
     private InputActions _inputActions;
@@ -51,16 +52,23 @@ public partial class PlayerInputSystemBase : SystemBase
         RefRW<InputComponent> inputComponent = SystemAPI.GetSingletonRW<InputComponent>();
         inputComponent.ValueRW.GameStart = true;
     }
-
+    
     private void ScreenPosition_performed(InputAction.CallbackContext obj)
     {
         Vector3 clickPosition = obj.ReadValue<Vector2>();
 
         if (!SystemAPI.HasSingleton<InputComponent>())
             return;
+
+        
+
         RefRW<InputComponent> inputComponent = SystemAPI.GetSingletonRW<InputComponent>();
 
-        clickPosition.z = Camera.main.nearClipPlane;
+        if (inputComponent.ValueRO.Spawn)
+            return;
+
+
+            clickPosition.z = Camera.main.nearClipPlane;
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(clickPosition);
         inputComponent.ValueRW.WorldPosition = worldPosition;
     }
@@ -88,6 +96,7 @@ public partial class PlayerInputSystemBase : SystemBase
         RefRW<InputComponent> inputComponent = SystemAPI.GetSingletonRW<InputComponent>();
         inputComponent.ValueRW.Spawn = true;
         inputComponent.ValueRW.ItemIndex = 1;
+        inputComponent.ValueRW.Selected = false;
     }
     private void SpawnItem2_performed(InputAction.CallbackContext obj)
     {
@@ -96,6 +105,7 @@ public partial class PlayerInputSystemBase : SystemBase
         RefRW<InputComponent> inputComponent = SystemAPI.GetSingletonRW<InputComponent>();
         inputComponent.ValueRW.Spawn = true;
         inputComponent.ValueRW.ItemIndex = 2;
+        inputComponent.ValueRW.Selected = false;
     }
     private void SpawnItem3_performed(InputAction.CallbackContext obj)
     {
@@ -104,6 +114,7 @@ public partial class PlayerInputSystemBase : SystemBase
         RefRW<InputComponent> inputComponent = SystemAPI.GetSingletonRW<InputComponent>();
         inputComponent.ValueRW.Spawn = true;
         inputComponent.ValueRW.ItemIndex = 3;
+        inputComponent.ValueRW.Selected = false;
     }
     private void SpawnItem4_performed(InputAction.CallbackContext obj)
     {
@@ -112,6 +123,7 @@ public partial class PlayerInputSystemBase : SystemBase
         RefRW<InputComponent> inputComponent = SystemAPI.GetSingletonRW<InputComponent>();
         inputComponent.ValueRW.Spawn = true;
         inputComponent.ValueRW.ItemIndex = 4;
+        inputComponent.ValueRW.Selected = false;
     }
     private void SpawnItem5_performed(InputAction.CallbackContext obj)
     {
@@ -120,6 +132,7 @@ public partial class PlayerInputSystemBase : SystemBase
         RefRW<InputComponent> inputComponent = SystemAPI.GetSingletonRW<InputComponent>();
         inputComponent.ValueRW.Spawn = true;
         inputComponent.ValueRW.ItemIndex = 5;
+        inputComponent.ValueRW.Selected = false;
     }
 
     private void SpawnItem6_performed(InputAction.CallbackContext obj)
@@ -129,6 +142,7 @@ public partial class PlayerInputSystemBase : SystemBase
         RefRW<InputComponent> inputComponent = SystemAPI.GetSingletonRW<InputComponent>();
         inputComponent.ValueRW.Spawn = true;
         inputComponent.ValueRW.ItemIndex = 6;
+        inputComponent.ValueRW.Selected = false;
     }
     private void Reset_performed(InputAction.CallbackContext obj)
     {
@@ -160,6 +174,7 @@ public partial class PlayerInputSystemBase : SystemBase
             return;
         RefRW<InputComponent> inputComponent = SystemAPI.GetSingletonRW<InputComponent>();
         inputComponent.ValueRW.Delete = true;
+        inputComponent.ValueRW.Selected = false;
     }
 
     private void UnregisterInput()

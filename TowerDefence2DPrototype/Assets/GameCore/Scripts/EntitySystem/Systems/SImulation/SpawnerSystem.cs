@@ -7,7 +7,6 @@ using Unity.Transforms;
 [BurstCompile]
 public partial struct SpawnerSystem : ISystem
 {
-    double time;
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
@@ -24,11 +23,8 @@ public partial struct SpawnerSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         EntityCommandBuffer commandBuffer = SystemAPI.GetSingleton<BeginFixedTickEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
-        float deltaTime = (float)(SystemAPI.Time.ElapsedTime - time);
-        time = SystemAPI.Time.ElapsedTime;
         new SpawnerJob
         {
-            deltaTime= deltaTime,
             ecbp = commandBuffer.AsParallelWriter()
         }.ScheduleParallel();
     }
@@ -36,7 +32,6 @@ public partial struct SpawnerSystem : ISystem
     [BurstCompile]
     public partial struct SpawnerJob : IJobEntity
     {
-        public float deltaTime;
         public EntityCommandBuffer.ParallelWriter ecbp;
 
         [BurstCompile]
@@ -44,7 +39,6 @@ public partial struct SpawnerSystem : ISystem
         {
             if (_spawnerComponent.ValueRO.count > 0)
             {
-                _spawnerComponent.ValueRW.delaycounter += deltaTime;
                 if (_spawnerComponent.ValueRO.delaycounter> _spawnerComponent.ValueRO.delay)
                 {
 
@@ -61,7 +55,7 @@ public partial struct SpawnerSystem : ISystem
                         {
                             ecbp.AddComponent(sortKey, spawnedentity, new Parent { Value = _spawnerComponent.ValueRO.localTransform });
                             ecbp.AddComponent(sortKey, spawnedentity, new SpawnedTag {  Index=_cleanUp.ValueRO.Index });
-                            ecbp.SetComponent<LocalTransform>(sortKey, spawnedentity, new LocalTransform { Position = _spawnerComponent.ValueRO.Position, Scale = 1, Rotation = new quaternion() });
+                            ecbp.SetComponent(sortKey, spawnedentity, new LocalTransform { Position = _spawnerComponent.ValueRO.Position, Scale = 1, Rotation = new quaternion() });
                             DynamicBuffer<LinkedEntityGroup> group = ecbp.AddBuffer<LinkedEntityGroup>(sortKey, _spawnerComponent.ValueRO.localTransform);
                             group.Add(_spawnerComponent.ValueRO.localTransform);  // Always add self as first member of group.
                             group.Add(spawnedentity);

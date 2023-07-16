@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using Unity.Burst;
 using Unity.Collections;
@@ -70,7 +71,7 @@ public partial struct PathFindingSystem : ISystem
         public void Execute([EntityIndexInQuery] int sortKey, Entity entity, RefRW<MovementComponent> _movement, RefRO<LocalTransform> _transform)
         {
 
-            if (_movement.ValueRO.PathCalculated == true)
+            if (_movement.ValueRO.PathCalculated == true || _movement.ValueRO.Speed==0)
                 return;
 
             _movement.ValueRW.NextPosition = _transform.ValueRO.Position;
@@ -80,6 +81,9 @@ public partial struct PathFindingSystem : ISystem
             startposition += grid.GridSize/2;
             int2 endposition = _movement.ValueRO.Goal;
             endposition += grid.GridSize / 2;
+            if (startposition.Equals(endposition))
+                return;
+
             int2 gridsize = grid.GridSize;
             NativeArray<PathNode> pathNodes = new NativeArray<PathNode>(gridsize.x * gridsize.y, Allocator.Temp);
 

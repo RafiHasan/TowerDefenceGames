@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 115048821389218852}
   - component: {fileID: 3398478559538042318}
   - component: {fileID: -2829081879007845925}
+  - component: {fileID: 4223065057747203555}
   - component: {fileID: -5450045630101352053}
   - component: {fileID: 6332501182350412500}
   - component: {fileID: -9043962900013171697}
@@ -57,7 +58,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 32ab895e1d8efde428f084332fee37fe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -105,12 +106,35 @@ MonoBehaviour:
   - ID: 1
     value: 500
     buff: 1
+  - ID: 2
+    value: 1
+    buff: 1
   - ID: 3
     value: 5
     buff: 1
   - ID: 7
     value: 1
     buff: 1
+--- !u!114 &4223065057747203555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2875729670536172983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 024295e7a31c1dd4c9a6dd769fdd4698, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NextPosition:
+    x: 0
+    y: 0
+    z: 0
+  Speed: 1
+  Goal:
+    x: 11
+    y: -14
 --- !u!114 &-5450045630101352053
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -45,7 +45,7 @@ public partial struct HealthTrackerSystem : ISystem
                 ecbp.RemoveComponent<HealthComponent>(sortKey,entity);
                 ecbp.RemoveComponent<SearchAbleComponent>(sortKey, entity);
                 ecbp.RemoveComponent<SearchingTag>(sortKey, entity);
-                ecbp.AddComponent(sortKey,entity,new DelayDestroyComponent { Delay=2.0f });
+                ecbp.AddComponent(sortKey,entity,new DelayDestroyComponent { Delay=0.0f });
             }
 
         }

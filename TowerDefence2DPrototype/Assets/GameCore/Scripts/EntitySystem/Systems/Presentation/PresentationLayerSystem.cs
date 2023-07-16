@@ -1,8 +1,8 @@
-using Unity.Burst;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
+using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 [UpdateInGroup(typeof(PresentationSystemGroup),OrderFirst =true)]
 public partial struct PresentationLayerSystem : ISystem
@@ -25,46 +25,33 @@ public partial struct PresentationLayerSystem : ISystem
 
             foreach (var (presentationObject, entity) in SystemAPI.Query<PresentationObjectComponent>().WithEntityAccess())
             {
-                presentationObject.gameObject.SetActive(false);
                 SpriteRenderer spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(entity);
                 spriteRenderer.enabled = true;
             }
             return;
         }
-
+        
         EntityCommandBuffer commandBuffer = SystemAPI.GetSingleton<BeginPresentationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
 
         foreach (var (plgo, entity) in SystemAPI.Query<PresentationComponent>().WithEntityAccess())
         {
-            GameObject go = GameObject.Instantiate(plgo.Prefab, new Vector3(-5000, -5000, 0), Quaternion.identity);
-            SpriteRenderer spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(entity);
-            go.GetComponent<SpriteRenderer>().color = spriteRenderer.color;
             commandBuffer.RemoveComponent<PresentationComponent>(entity);
-            commandBuffer.AddComponent(entity, new PresentationObjectComponent { gameObject = go });
-            commandBuffer.AddComponent(entity, new PresentationTransformComponent { transform = go.GetComponent<Transform>() });
-            commandBuffer.AddComponent(entity, new PresentationAnimatorComponent { animator = go.GetComponent<Animator>() });
+            commandBuffer.AddComponent(entity, new PresentationObjectComponent { itemsprite= plgo.Prefab.GetComponent<SpriteRenderer>().sprite});
+            commandBuffer.AddComponent(entity, new PresentationTransformComponent {  });
+            commandBuffer.AddComponent(entity, new PresentationAnimatorComponent {  });
             commandBuffer.AddComponent(entity, new PresentationDataComponent { });
         }
-
-
         
-
-        foreach (var (presentationObject, entity) in SystemAPI.Query<PresentationObjectComponent>().WithEntityAccess())
+        foreach (var (presentationObject, localTransform, entity) in SystemAPI.Query<PresentationObjectComponent, LocalTransform>().WithEntityAccess())
         {
-            presentationObject.gameObject.SetActive(true);
+            GpuInstanceRenderer.Instance.UdateVisualGPU(presentationObject.itemsprite, Matrix4x4.Translate(localTransform.Position));
             SpriteRenderer spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(entity);
             spriteRenderer.enabled = false;
-            
-        }
-
-        foreach (var (presentationTransform, localTransform) in SystemAPI.Query<PresentationTransformComponent,LocalTransform>())
-        {
-            presentationTransform.transform.position = localTransform.Position;
         }
 
         foreach (var (presentationAnimator,presentationData,entity) in SystemAPI.Query<PresentationAnimatorComponent, PresentationDataComponent>().WithEntityAccess())
         {
-            if(presentationData.entityState==EntityState.WALK)
+            /*if(presentationData.entityState==EntityState.WALK)
             {
                 presentationAnimator.animator.SetBool("Walk", true);
                 presentationAnimator.animator.SetBool("Attack", false);
@@ -79,7 +66,7 @@ public partial struct PresentationLayerSystem : ISystem
                 presentationAnimator.animator.SetBool("Walk", false);
                 presentationAnimator.animator.SetBool("Attack", false);
                 presentationAnimator.animator.SetBool("Death", true);
-            }
+            }*/
             
         }
 
