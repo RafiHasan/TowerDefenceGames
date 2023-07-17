@@ -102,18 +102,22 @@ public partial struct MovementGoalProviderSystem : ISystem
             }
             else if(_search.ValueRO.TagID == SearchingTagID.PLAYER)
             {
+
+                if (_movement.ValueRO.Goal.x < 100)
+                    return;
+
                 float3 mypos = _transform.ValueRO.Position;
 
                 float distance = float.MaxValue;
                 float3 targetpos = _transform.ValueRO.Position;
-                for (int i = 0; i < tempenemypos.Length; i++)
+                /*for (int i = 0; i < tempenemypos.Length; i++)
                 {
                     if (math.distance(mypos, tempenemypos[i]) < distance)
                     {
                         targetpos = tempenemypos[i];
                         distance = math.distance(mypos, tempenemypos[i]);
                     }
-                }
+                }*/
                 _movement.ValueRW.Goal = grid.GetCellIndex(targetpos);
 
             }

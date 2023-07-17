@@ -14,8 +14,9 @@ GameObject:
   - component: {fileID: 5675405220727339089}
   - component: {fileID: -1884978999994482929}
   - component: {fileID: -6702576248963182193}
-  - component: {fileID: -4851631598587598489}
+  - component: {fileID: 1264233425878337625}
   - component: {fileID: 764364514829854689}
+  - component: {fileID: -7119814680810313092}
   m_Layer: 0
   m_Name: PlayerAlly
   m_TagString: Untagged
@@ -133,8 +134,8 @@ MonoBehaviour:
     z: 0
   Speed: 1
   Goal:
-    x: 11
-    y: -14
+    x: 1000
+    y: 1000
 --- !u!114 &-1884978999994482929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,7 +163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetTagID: 3
   SearchRadious: 2
---- !u!114 &-4851631598587598489
+--- !u!114 &1264233425878337625
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,3 +189,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 7159355685930012598, guid: ee1d8c9420ca29848979519e79fc5ccc, type: 3}
+--- !u!114 &-7119814680810313092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2875729670536172983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bed9ce6022aa49f4cb070449bea66e1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 0

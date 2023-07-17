@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -7531322569354887052}
   - component: {fileID: 7452067032775301726}
   - component: {fileID: 171169861215308497}
+  - component: {fileID: 3336181304417042005}
   m_Layer: 0
   m_Name: TowerIce
   m_TagString: Untagged
@@ -187,3 +188,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 7159355685930012598, guid: cb385e13020455347bca8c9ccb6550bc, type: 3}
+--- !u!114 &3336181304417042005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031432393556433102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bed9ce6022aa49f4cb070449bea66e1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 0

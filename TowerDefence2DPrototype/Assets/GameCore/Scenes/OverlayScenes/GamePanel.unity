@@ -431,7 +431,7 @@ MonoBehaviour:
   ammount: 10000
   timar: 10
   seed: 1
-  ShowPresentationLayer: 0
+  ShowPresentationLayer: 1
 --- !u!4 &266137493
 Transform:
   m_ObjectHideFlags: 0
@@ -3745,7 +3745,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &1281383242
 GameObject:
   m_ObjectHideFlags: 0
@@ -5268,7 +5268,11 @@ MonoBehaviour:
     Select tile with tower and Press BackSpace to remove it
 
     Click
-    Start To Start Zombie Spawn'
+    Start To Start Zombie Spawn
+
+
+    Click on ally or hero to select them and click
+    on anothe grid position to move them there.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

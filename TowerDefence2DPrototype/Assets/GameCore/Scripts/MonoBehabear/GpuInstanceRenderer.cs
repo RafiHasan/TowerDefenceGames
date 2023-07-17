@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using Unity.Entities.UniversalDelegates;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GpuInstanceRenderer : MonoBehaviour
@@ -14,33 +11,54 @@ public class GpuInstanceRenderer : MonoBehaviour
     {
         Instance = this;
     }
-    public Dictionary<Sprite, List<Matrix4x4>> keyValuePairs = new Dictionary<Sprite, List<Matrix4x4>>();
 
-    public void UdateVisualGPU(Sprite sprite, Matrix4x4 instData)
+    public Dictionary<Sprite, List<Matrix4x4>> matrixDict = new Dictionary<Sprite, List<Matrix4x4>>();
+
+    public Dictionary<Sprite, Color> colorDict = new Dictionary<Sprite, Color>();
+
+    public void UdateVisualGPU(Sprite sprite, Matrix4x4 instData,Color color)
     {
 
-        if(keyValuePairs.ContainsKey(sprite))
+        if(matrixDict.ContainsKey(sprite))
         {
-            keyValuePairs[sprite].Add(instData);
+            matrixDict[sprite].Add(instData);
         }
         else
         {
-            keyValuePairs.Add(sprite,new List<Matrix4x4> { instData });
+            matrixDict.Add(sprite,new List<Matrix4x4> { instData });
         }
+
+
+        if (colorDict.ContainsKey(sprite))
+        {
+            colorDict[sprite]=color;
+        }
+        else
+        {
+            colorDict.Add(sprite, color);
+        }
+
     }
 
 
     public void LateUpdate()
     {
 
-        foreach(Sprite sprite in keyValuePairs.Keys)
+        foreach(Sprite sprite in matrixDict.Keys)
         {
             
             Material newMaterial = new Material(material);
             newMaterial.SetTexture("_MainTex", sprite.texture);
-            Graphics.DrawMeshInstanced(mesh, 0, newMaterial, keyValuePairs[sprite]);
+
+            if(colorDict.ContainsKey(sprite))
+            {
+                newMaterial.SetColor("_Color", colorDict[sprite]);
+            }
+
+            Graphics.DrawMeshInstanced(mesh, 0, newMaterial, matrixDict[sprite]);
         }
 
-        keyValuePairs.Clear();
+        matrixDict.Clear();
+        colorDict.Clear();
     }
 }

@@ -83,6 +83,23 @@ public partial class GridSystem : SystemBase
             return;
         }
 
+        if (inputComponent.ValueRO.Selected)
+        {
+            EntityCommandBuffer ecb = commandBufferSystemBegin.CreateCommandBuffer();
+            foreach (var (selectable, localtransform, entity) in SystemAPI.Query<SelectAbleTag, LocalTransform>().WithEntityAccess())
+            {
+                if(math.distance(localtransform.Position, gridComponent.ValueRO.GetCellPosition(gridComponent.ValueRO.GetCellIndex(inputComponent.ValueRO.WorldPosition)))<0.1f)
+                {
+                    ecb.AddComponent<SelectedTag>(entity);
+                    gridComponent.ValueRW.UnSelectCell();
+                    inputComponent.ValueRW.Selected = false;
+                    break;
+                }
+            }
+        }
+            
+
+
 
         if (inputComponent.ValueRO.Selected)
         {

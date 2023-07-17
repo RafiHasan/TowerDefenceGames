@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -1838930365746842683}
   - component: {fileID: 1278496154962320965}
   - component: {fileID: 4288824654618448385}
+  - component: {fileID: 8961387559212558395}
   m_Layer: 0
   m_Name: TowerFire
   m_TagString: Untagged
@@ -187,3 +188,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 7159355685930012598, guid: 44141a3fe2c804e4d8ce409923222953, type: 3}
+--- !u!114 &8961387559212558395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7194122725721283233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bed9ce6022aa49f4cb070449bea66e1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 0

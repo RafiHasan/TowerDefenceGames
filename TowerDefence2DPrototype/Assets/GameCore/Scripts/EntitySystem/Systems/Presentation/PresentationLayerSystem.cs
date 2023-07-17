@@ -44,10 +44,24 @@ public partial struct PresentationLayerSystem : ISystem
         
         foreach (var (presentationObject, localTransform, entity) in SystemAPI.Query<PresentationObjectComponent, LocalTransform>().WithEntityAccess())
         {
-            GpuInstanceRenderer.Instance.UdateVisualGPU(presentationObject.itemsprite, Matrix4x4.Translate(localTransform.Position));
             SpriteRenderer spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(entity);
             spriteRenderer.enabled = false;
+
+            if (state.EntityManager.HasComponent<SelectedTag>(entity))
+                continue;
+
+
+            GpuInstanceRenderer.Instance.UdateVisualGPU(presentationObject.itemsprite, Matrix4x4.Translate(localTransform.Position), spriteRenderer.color);
         }
+
+        foreach (var (seletecTag,presentationObject, localTransform, entity) in SystemAPI.Query<SelectedTag, PresentationObjectComponent, LocalTransform>().WithEntityAccess())
+        {
+            SpriteRenderer spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(entity);
+            spriteRenderer.enabled = false;
+            GpuInstanceRenderer.Instance.UdateVisualGPU(presentationObject.itemsprite, Matrix4x4.TRS(localTransform.Position,Quaternion.identity,Vector3.one*1.25f), new Color(spriteRenderer.color.r*0.9f, spriteRenderer.color.g * 0.9f, spriteRenderer.color.b * 0.9f, spriteRenderer.color.a));
+        }
+
+
 
         foreach (var (presentationAnimator,presentationData,entity) in SystemAPI.Query<PresentationAnimatorComponent, PresentationDataComponent>().WithEntityAccess())
         {
